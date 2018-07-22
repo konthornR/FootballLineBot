@@ -5,7 +5,6 @@ use Football\Manager;
 require_once   __DIR__ . "/vendor/autoload.php";
 
 $manager = Manager::getInstance();
-$config = $manager->getConfig();
 
 $accessToken = getenv('ACCESS_TOKEN');
 $adminLineID = getenv('ADMIN_LINE_ID');
