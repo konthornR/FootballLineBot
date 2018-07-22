@@ -2,7 +2,7 @@
 
 require_once   __DIR__ . "/vendor/autoload.php";
 
-date_default_timezone_set('Thailand/Bangkok');
+date_default_timezone_set('Asia/Thailand');
 
 $accessToken = getenv('ACCESS_TOKEN');
 $adminLineID = getenv('ADMIN_LINE_ID');
