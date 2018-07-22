@@ -7,7 +7,8 @@ require_once   __DIR__ . "/vendor/autoload.php";
 $manager = Manager::getInstance();
 $config = $manager->getConfig();
 
-$accessToken = $config['accessToken'];
+$accessToken = getenv('ACCESS_TOKEN');
+$adminLineID = getenv('ADMIN_LINE_ID');
 
 $content = file_get_contents('php://input');
 $arrayJson = json_decode($content, true);
@@ -19,7 +20,7 @@ $arrayHeader[] = "Authorization: Bearer {$accessToken}";
 register_shutdown_function( 'shutdownFunction', [
     'arrayHeader' => $arrayHeader,
     'arrayJson' => $arrayJson,
-    'config' => $config,
+    'adminLineID' => $adminLineID,
 ]);
 
 $message = $arrayJson['events'][0]['message']['text'];
@@ -58,7 +59,7 @@ try {
         $manager->process($message, $fromGroupID);
     }
 } catch(Exception $e) {
-    pushMsg($arrayHeader, $config['adminLineID'], $e->__toString());
+    pushMsg($arrayHeader, $adminLineID, $e->__toString());
 }
 
 function replyMsg($arrayHeader, $arrayJson, $content){
@@ -101,7 +102,7 @@ function pushMsg($arrayHeader, $toID, $content){
 function shutDownFunction($var) {
     $error = error_get_last();
     if ($error) {
-        pushMsg($var['arrayHeader'], $var['config']['adminLineID'], $error['message']);
+        pushMsg($var['arrayHeader'], $var['adminLineID'], $error['message']);
     }
 }
 
