@@ -1,5 +1,7 @@
 <?php
 
+use Football\Manager;
+
 require_once   __DIR__ . "/vendor/autoload.php";
 
 date_default_timezone_set('Asia/Bangkok');
@@ -12,6 +14,22 @@ $arrayHeader[] = "Content-Type: application/json";
 $arrayHeader[] = "Authorization: Bearer {$accessToken}";
 
 pushMsg($arrayHeader, $adminLineID, "cron started: " . date('d/m/Y h:i:s a', time()));
+
+$manager = Manager::getInstance();
+
+switch($manager->getState()) {
+    case Manager::STATE_SLEEP:
+        break;
+
+    case Manager::STATE_FINAL_CHECKED:
+        break;
+
+    case Manager::STATE_SECOND_CHECKED:
+        break;
+
+
+}
+
 
 function pushMsg($arrayHeader, $toID, $content){
     $strUrl = "https://api.line.me/v2/bot/message/push";

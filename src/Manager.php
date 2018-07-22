@@ -19,6 +19,16 @@ class Manager
 
     protected static $instance = null;
 
+    protected $state = self::STATE_SLEEP;
+
+    const STATE_INITIAL = 'initial';
+    const STATE_FIRST_CHECKED = 'first_checked';
+    const STATE_SECOND_CHECKED = 'second_checked';
+    const STATE_FINAL_CHECKED = 'final_checked';
+    const STATE_CONFIRMED = 'confirmed';
+    const STATE_SLEEP = 'sleep';
+
+
     function __construct()
     {
         $this->config = require_once __DIR__ . "/../config.php";
@@ -42,6 +52,7 @@ class Manager
         $data = json_decode(file_get_contents(self::SAVE_FILE), true);
         $this->startCount = $data['startCount'] ?? false;
         $this->forDate = $data['forDate'] ?? '';
+        $this->state = $data['state'] ?? self::STATE_SLEEP;
     }
 
     protected function initializeTeam(): void
@@ -83,6 +94,7 @@ class Manager
         fwrite($fp, json_encode([
             'startCount' => $this->startCount,
             'forDate' => $this->forDate,
+            'state' => $this->state
         ]));
         fclose($fp);
     }
@@ -93,6 +105,14 @@ class Manager
     public function getConfig(): array
     {
         return $this->config;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState(): string
+    {
+        return $this->state;
     }
 
     /**
