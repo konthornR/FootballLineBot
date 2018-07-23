@@ -88,7 +88,7 @@ class Manager
         }
     }
 
-    protected function save(): void
+    public function save(): void
     {
         $fp = fopen(self::SAVE_FILE, 'w');
         fwrite($fp, json_encode([
@@ -136,6 +136,44 @@ class Manager
         return $content;
     }
 
+	/**
+	 * @return bool
+	 */
+    public function isCountStart(): bool
+	{
+		return $this->startCount;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getForDate(): string
+	{
+		return $this->forDate;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTotalPlayers(): int
+	{
+		$result = 0;
+		foreach ($this->teams as $team) {
+			$result += $team->getNumPlayers();
+		}
+		return $result;
+	}
+
+	/**
+	 * @param string $state
+	 * @return Manager
+	 */
+	public function setState(string $state): Manager
+	{
+		$this->state = $state;
+		return $this;
+	}
+
     /**
      * @return bool
      */
@@ -145,6 +183,7 @@ class Manager
             return false;
         }
 
+        $this->state = Manager::STATE_INITIAL;
         $this->startCount = true;
 
         // Get next thursday.
@@ -171,6 +210,7 @@ class Manager
         }
 
         $this->startCount = false;
+        $this->state = self::STATE_SLEEP;
         $this->save();
         return true;
     }

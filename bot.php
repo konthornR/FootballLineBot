@@ -29,29 +29,21 @@ try {
     $teams = $manager->getTeams();
     $fromTeamName = isset($teams[$fromGroupID]) ? $teams[$fromGroupID]->getName() : '';
 
-    if(strpos($message, '-bc') !== false) {
+    if(substr($message, 0, 3) == '-bc') {
         // Broadcast msg
-        $content = trim(substr($message, 3)) . "\n >Msg from {$fromTeamName}";
-        foreach($teams as $team) {
-            if ($team->getGroupLineID() != $fromGroupID) {
-                pushMsg($arrayHeader, $team->getGroupLineID(), $content);
-            }
+        $content = "Broadcast: \n" . trim(substr($message, 3)) . "\n >Msg from {$fromTeamName}";
+        /** @var \Football\Team $team */
+		foreach($teams as $team) {
+			pushMsg($arrayHeader, $team->getGroupLineID(), $content);
         }
-    } else if(strpos($message, '-r') !== false) {
+    } else if(substr($message, 0, 2) == '-r') {
         // Show report
         $content = $manager->getTeamsReport();
         replyMsg($arrayHeader, $arrayJson, $content);
-    } else if(strpos($message, '-h') !== false) {
-        // Show help msg.
-    } else if(strpos($message, '-s') !== false) {
-        $content = 'Thursday football kub?';
-        if($manager->startCount()) {
-            foreach($teams as $team) {
-                pushMsg($arrayHeader, $team->getGroupLineID(), $content);
-            }
-        }
-    }else if(strpos($message, '-e') !== false) {
-        $manager->endCount();
+    } else if(substr($message, 0, 2) == '-h') {
+		replyMsg($arrayHeader, $arrayJson,
+			"1 = มา \n 0 = ไม่มา \n -1 = กดมาแล้วเปลี่ยนใจ \n ------ \n commands: \n -r = show report \n -bc msg = broadcast msg to other groups"
+		);
     }else if(strpos($message, '-id') !== false) {
         replyMsg($arrayHeader, $arrayJson, $fromGroupID);
     }else {
