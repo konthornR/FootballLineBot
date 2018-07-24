@@ -15,7 +15,7 @@ $manager = Manager::getInstance();
 
 if ($manager->isCountStart()) {
 	$forThursday = DateTime::createFromFormat('d-m-Y', $manager->getForDate());
-	$interval = $nextThursday->diff($currentDateTime);
+	$interval = $forThursday->diff($currentDateTime);
 	$diffHour = ($interval->days * 24) + $interval->h;
 
 	pushMsg($adminLineID, "for Thursday: " . $forThursday->format('d-m-Y'));
