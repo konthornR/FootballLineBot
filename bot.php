@@ -25,8 +25,12 @@ register_shutdown_function( 'shutdownFunction', [
 $message = $arrayJson['events'][0]['message']['text'];
 $fromGroupID = $arrayJson['events'][0]['source']['groupId'];
 
+if (empty($message) || empty($fromGroupID)) exit;
+
 try {
     $teams = $manager->getTeams();
+    if (!isset($teams[$fromGroupID])) exit;
+
     $fromTeamName = isset($teams[$fromGroupID]) ? $teams[$fromGroupID]->getName() : '';
 
     if(substr($message, 0, 3) == '-bc') {
