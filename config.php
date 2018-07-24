@@ -4,15 +4,15 @@ return [
     'teams' => [
         [
             'name' => 'ขาว',
-            'groupID' => "Cd378bc878914d95778542d8fc9ef5b87"
+            'groupID' => getenv('GROUP_ID_ICS_ALUMNI'),
         ],
         [
             'name' => 'แดง',
-            'groupID' => "id1"
+            'groupID' => getenv('GROUP_ID_ICS_ALUMNI'),
         ],
         [
             'name' => 'ฟ้า',
-            'groupID' => "id2"
+            'groupID' => getenv('GROUP_ID_REUTERS'),
         ],
     ],
 ];

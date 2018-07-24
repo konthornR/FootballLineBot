@@ -24,10 +24,6 @@ if ($manager->isCountStart()) {
 	$diffHour = 100;
 }
 
-
-pushMsg($adminLineID, "cron started: ");
-pushMsg($adminLineID, "cron started: ");
-
 switch($manager->getState()) {
     case Manager::STATE_SLEEP:
 		$nextThursday = new DateTime();
@@ -36,8 +32,9 @@ switch($manager->getState()) {
 		$interval = $nextThursday->diff($currentDateTime);
 		$diffHour = ($interval->days * 24) + $interval->h;
 
-		pushMsg($adminLineID, "Next Thursday: " . $nextThursday->format('d-m-Y'));
-		pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y'));
+		pushMsg($adminLineID, "Next Thursday: " . $nextThursday->format('d-m-Y h:i:s'));
+		pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y h:i:s'));
+		pushMsg($adminLineID, "hour diff: " . $diffHour);
 
 		if ($diffHour <= 36) {
 			if ($manager->startCount()) {
