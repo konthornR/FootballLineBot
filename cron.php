@@ -18,8 +18,9 @@ if ($manager->isCountStart()) {
 	$interval = $forThursday->diff($currentDateTime);
 	$diffHour = ($interval->days * 24) + $interval->h;
 
-	pushMsg($adminLineID, "for Thursday: " . $forThursday->format('d-m-Y'));
-	pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y'));
+	pushMsg($adminLineID, "for Thursday: " . $forThursday->format('d-m-Y h:i:s'));
+	pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y h:i:s'));
+    pushMsg($adminLineID, "hour diff: " . $diffHour);
 } else {
 	$diffHour = 100;
 }
@@ -36,14 +37,14 @@ switch($manager->getState()) {
 		pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y h:i:s'));
 		pushMsg($adminLineID, "hour diff: " . $diffHour);
 
-		if ($diffHour <= 36) {
+		if ($diffHour <= 35) {
 			if ($manager->startCount()) {
 				broadcast($manager->getTeams(), 'Thursday Football kub?');
 			};
 		}
         break;
 	case Manager::STATE_INITIAL:
-		if ($diffHour <= 12) {
+		if ($diffHour <= 11) {
 			if ($manager->getTotalPlayers() < 21) {
 				$manager->setState(Manager::STATE_FIRST_CHECKED)->save();
 				broadcast($manager->getTeams(), $manager->getTeamsReport() . "Anymore?");
