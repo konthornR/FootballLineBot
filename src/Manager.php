@@ -10,8 +10,6 @@ class Manager
 
     protected $forDate = '';
 
-    const SAVE_FILE = __DIR__ . '/../data/manager.json';
-
     const DB_KEY = "manager";
 
     /** @var Team[] */
@@ -19,7 +17,7 @@ class Manager
 
     protected $config;
 
-    protected $db;
+    protected $dbManager;
 
     protected static $instance = null;
 
@@ -36,7 +34,7 @@ class Manager
     function __construct()
     {
         $this->config = require_once __DIR__ . "/../config.php";
-        $this->db = DBManager::getInstance();
+        $this->dbManager = DBManager::getInstance();
         $this->load();
         $this->initializeTeam();
     }
@@ -52,12 +50,10 @@ class Manager
 
     protected function load(): void
     {
-    	$result = $this->db->query("SELECT value WHERE key = '" . self::DB_KEY . "'");
-    	echo $result;
 
-        if (!file_exists(self::SAVE_FILE)) return;
-
-        $data = json_decode(file_get_contents(self::SAVE_FILE), true);
+    	$data = $this->dbManager->get(self::DB_KEY);
+    	if (!$data) return;
+        $data = json_decode($data, true);
         $this->startCount = $data['startCount'] ?? false;
         $this->forDate = $data['forDate'] ?? '';
         $this->state = $data['state'] ?? self::STATE_SLEEP;
@@ -98,13 +94,12 @@ class Manager
 
     public function save(): void
     {
-        $fp = fopen(self::SAVE_FILE, 'w');
-        fwrite($fp, json_encode([
+        $this->dbManager->set(self::DB_KEY, json_encode([
             'startCount' => $this->startCount,
             'forDate' => $this->forDate,
             'state' => $this->state
         ]));
-        fclose($fp);
+
     }
 
     /**

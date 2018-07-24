@@ -15,12 +15,17 @@ class Team
 
     protected $saveFile;
 
+    protected $dbKey;
+
+    protected $dbManager;
+
     function __construct(string $id, string $name, float $numPlayers = 0)
     {
         $this->id = $id;
         $this->name = $name;
         $this->numPlayers = $numPlayers;
-        $this->saveFile = __DIR__ . "/../data/team-{$id}.json";
+        $this->dbManager = DBManager::getInstance();
+        $this->dbKey = "team-{$id}";
     }
 
     /**
@@ -56,17 +61,16 @@ class Team
 
     public function load(): void
     {
-        if (!file_exists($this->saveFile)) return;
+        $data = $this->dbManager->get($this->dbKey);
+        if (!$data) return;
 
-        $data = json_decode(file_get_contents($this->saveFile), true);
+        $data = json_decode($data, true);
         $this->numPlayers = $data['numPlayers'] ?? 0;
     }
 
     public function save(): void
     {
-        $fp = fopen($this->saveFile, 'w');
-        fwrite($fp, json_encode($this->toArray()));
-        fclose($fp);
+        $this->dbManager->set($this->dbKey, json_encode($this->toArray()));
     }
 
     /**

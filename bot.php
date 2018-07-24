@@ -22,8 +22,8 @@ register_shutdown_function( 'shutdownFunction', [
     'adminLineID' => $adminLineID,
 ]);
 
-$message = $arrayJson['events'][0]['message']['text'];
-$fromGroupID = $arrayJson['events'][0]['source']['groupId'];
+$message = $arrayJson['events'][0]['message']['text'] ?? null;
+$fromGroupID = $arrayJson['events'][0]['source']['groupId'] ?? null;
 
 if (empty($message) || empty($fromGroupID)) exit;
 
