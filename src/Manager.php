@@ -12,10 +12,14 @@ class Manager
 
     const SAVE_FILE = __DIR__ . '/../data/manager.json';
 
+    const DB_KEY = "manager";
+
     /** @var Team[] */
     protected $teams = [];
 
     protected $config;
+
+    protected $db;
 
     protected static $instance = null;
 
@@ -32,6 +36,7 @@ class Manager
     function __construct()
     {
         $this->config = require_once __DIR__ . "/../config.php";
+        $this->db = DBManager::getInstance();
         $this->load();
         $this->initializeTeam();
     }
@@ -47,6 +52,9 @@ class Manager
 
     protected function load(): void
     {
+    	$result = $this->db->query("SELECT value WHERE key = '" . self::DB_KEY . "'");
+    	echo $result;
+
         if (!file_exists(self::SAVE_FILE)) return;
 
         $data = json_decode(file_get_contents(self::SAVE_FILE), true);
