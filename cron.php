@@ -14,7 +14,7 @@ $currentDateTime = new DateTime();
 $manager = Manager::getInstance();
 
 if ($manager->isCountStart()) {
-	$forThursday = DateTime::createFromFormat('d-m-Y', $manager->getForDate());
+	$forThursday = DateTime::createFromFormat('d-m-Y h:i:s', $manager->getForDate() . " 00:00:00");
 	$interval = $forThursday->diff($currentDateTime);
 	$diffHour = ($interval->days * 24) + $interval->h;
 
