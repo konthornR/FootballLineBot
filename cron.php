@@ -10,17 +10,13 @@ date_default_timezone_set('Asia/Bangkok');
 $adminLineID = getenv('ADMIN_LINE_ID');
 
 $currentDateTime = new DateTime();
-
 $manager = Manager::getInstance();
+$forThursday = null;
 
 if ($manager->isCountStart()) {
 	$forThursday = DateTime::createFromFormat('d-m-Y h:i:s', $manager->getForDate() . " 00:00:00");
 	$interval = $forThursday->diff($currentDateTime);
 	$diffHour = ($interval->days * 24) + $interval->h;
-
-	pushMsg($adminLineID, "for Thursday: " . $forThursday->format('d-m-Y h:i:s'));
-	pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y h:i:s'));
-    pushMsg($adminLineID, "hour diff: " . $diffHour);
 } else {
 	$diffHour = 100;
 }
@@ -32,10 +28,6 @@ switch($manager->getState()) {
 
 		$interval = $nextThursday->diff($currentDateTime);
 		$diffHour = ($interval->days * 24) + $interval->h;
-
-		pushMsg($adminLineID, "Next Thursday: " . $nextThursday->format('d-m-Y h:i:s'));
-		pushMsg($adminLineID, "current datetime: " . $currentDateTime->format('d-m-Y h:i:s'));
-		pushMsg($adminLineID, "hour diff: " . $diffHour);
 
 		if ($diffHour <= 35) {
 			if ($manager->startCount()) {
@@ -91,8 +83,9 @@ switch($manager->getState()) {
 		break;
 
 	case Manager::STATE_CONFIRMED:
-		if ($diffHour <= -18) {
+		if ($forThursday && $currentDateTime > $forThursday && $diffHour >= 22) {
 			$manager->endCount();
+			pushMsg($adminLineID, "End count.");
 		}
 		break;
 }
