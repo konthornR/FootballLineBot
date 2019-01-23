@@ -85,7 +85,7 @@ class Manager
                 $team->addPlayer(floatval($message))->save();
             } else if($message[0] == '=') {
                 $num = substr($message, 1);
-                if (is_numeric($num) && floatval($num) <= 14) {
+                if (is_numeric($num) && floatval($num) <= 24) {
                     $team->setPlayer($num)->save();
                 }
             }
