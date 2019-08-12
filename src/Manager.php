@@ -26,6 +26,7 @@ class Manager
     const STATE_INITIAL = 'initial';
     const STATE_FIRST_CHECKED = 'first_checked';
     const STATE_SECOND_CHECKED = 'second_checked';
+    const STATE_THIRD_CHECKED = 'third_checked';
     const STATE_FINAL_CHECKED = 'final_checked';
     const STATE_CONFIRMED = 'confirmed';
     const STATE_SLEEP = 'sleep';

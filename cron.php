@@ -29,13 +29,26 @@ switch($manager->getState()) {
 		$interval = $nextThursday->diff($currentDateTime);
 		$diffHour = ($interval->days * 24) + $interval->h;
 
-		if ($diffHour <= 35) {
+		if ($diffHour <= 59) {
 			if ($manager->startCount()) {
 				broadcast($manager->getTeams(), 'Thursday Football kub?');
 			};
 		}
         break;
-	case Manager::STATE_INITIAL:
+
+    case Manager::STATE_INITIAL:
+        if ($diffHour <= 35) {
+            if ($manager->getTotalPlayers() < 21) {
+                $manager->setState(Manager::STATE_FIRST_CHECKED)->save();
+                broadcast($manager->getTeams(), $manager->getTeamsReport() . "Anymore?");
+            }else {
+                $manager->setState(Manager::STATE_CONFIRMED)->save();
+                broadcast($manager->getTeams(), $manager->getTeamsReport() . "คอนเฟิมมีเตะครับ");
+            }
+        }
+        break;
+
+	case Manager::STATE_FIRST_CHECKED:
 		if ($diffHour <= 11) {
 			if ($manager->getTotalPlayers() < 21) {
 				$manager->setState(Manager::STATE_FIRST_CHECKED)->save();
@@ -47,7 +60,7 @@ switch($manager->getState()) {
 		}
 		break;
 
-    case Manager::STATE_FIRST_CHECKED:
+    case Manager::STATE_SECOND_CHECKED:
 		if ($diffHour <= 6) {
 			if ($manager->getTotalPlayers() < 14) {
 				$manager->setState(Manager::STATE_SECOND_CHECKED)->save();
@@ -59,7 +72,7 @@ switch($manager->getState()) {
 		}
 		break;
 
-    case Manager::STATE_SECOND_CHECKED:
+    case Manager::STATE_THIRD_CHECKED:
 		if ($diffHour <= 4) {
 			if ($manager->getTotalPlayers() < 14) {
 				$manager->setState(Manager::STATE_FINAL_CHECKED)->save();
