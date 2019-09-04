@@ -51,7 +51,7 @@ switch($manager->getState()) {
 	case Manager::STATE_FIRST_CHECKED:
 		if ($diffHour <= 11) {
 			if ($manager->getTotalPlayers() < 21) {
-				$manager->setState(Manager::STATE_FIRST_CHECKED)->save();
+				$manager->setState(Manager::STATE_SECOND_CHECKED)->save();
 				broadcast($manager->getTeams(), $manager->getTeamsReport() . "Anymore?");
 			}else {
 				$manager->setState(Manager::STATE_CONFIRMED)->save();
@@ -63,7 +63,7 @@ switch($manager->getState()) {
     case Manager::STATE_SECOND_CHECKED:
 		if ($diffHour <= 6) {
 			if ($manager->getTotalPlayers() < 14) {
-				$manager->setState(Manager::STATE_SECOND_CHECKED)->save();
+				$manager->setState(Manager::STATE_THIRD_CHECKED)->save();
 				broadcast($manager->getTeams(), $manager->getTeamsReport() . "Anymore?");
 			}else {
 				$manager->setState(Manager::STATE_CONFIRMED)->save();
